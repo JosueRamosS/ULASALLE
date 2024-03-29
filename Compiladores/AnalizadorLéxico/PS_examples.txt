@@ -1,0 +1,67 @@
+// Fibonacci numbers in PīnyīnScript
+gōngnéng fibonacci(n) {
+    rúguǒ (n <= 1) {
+        fǎnhuí n;
+    } biéde {
+        fǎnhuí fibonacci(n - 1) + fibonacci(n - 2);
+    }
+}
+
+zhǔyàode {
+    zhěngshù f = fibonacci(10);
+    dǎyìn -> "The first ten numbers of Fibonacci are: ";
+    dǎyìn -> f;
+}
+
+// Print numbers backwards in PīnyīnScript
+gōngnéng printReverse(n) {
+    rúguǒ (n >= 1) {
+        dǎyìn -> n;
+        printReverse(n - 1);
+    }
+}
+
+zhǔyàode {
+    printReverse(100);
+}
+
+// Sum function in PīnyīnScript
+gōngnéng sum(x, y) {
+    fǎnhuí x + y;
+}
+
+zhǔyàode {
+    zhěngshù result = sum(9, 5);
+    dǎyìn -> "The result is: ";
+    dǎyìn -> result;
+}
+
+// Hello world in PīnyīnScript
+zhǔyàode {
+    dǎyìn -> "Hello world!!";
+}
+
+// Iterative factorial in PīnyīnScript
+gōngnéng iterativeFactorial(x) {
+    zhěngshù result = 1;
+    pàn (zhěngshù i = 1; i <= x; i++)
+        result = result * i;
+    }
+    fǎnhuí result;
+}
+
+// Recursive factorial in PīnyīnScript
+gōngnéng recursiveFactorial(x) {
+    rúguǒ (x <= 1) {
+        fǎnhuí 1;
+    } biéde {
+        fǎnhuí x * recursiveFactorial(x - 1);
+    }
+}
+
+zhǔyàode {
+    zhěngshù n = 5;
+    zhěngshù result = recursiveFactorial(n);
+    dǎyìn -> "The result is : ";
+    dǎyìn -> result;
+}
