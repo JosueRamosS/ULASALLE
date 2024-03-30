@@ -1,7 +1,7 @@
+#library
 import ply.lex as lex
 
 #tokens
-
 tokens = (
     'MAIN',
     'FUNCTION',
@@ -16,10 +16,10 @@ tokens = (
     'RETURN',
     'MLCOMM',
     'ILCOMM',
-    'STRING',
+    'VSTRING',
     'VTRUE',
     'VFALSE',
-    'VIDENTIFIER',
+    'IDENTIFIER',
     'VINTEGER',
     'VFLOAT',
     'EQUAL',
@@ -39,8 +39,7 @@ tokens = (
     'COMMA'
 )
 
-#regular expressions
-
+#regular expressions in functions
 def t_MAIN(t):
     r'zhǔyàode'
     return t
@@ -52,6 +51,7 @@ def t_FUNCTION(t):
 def t_FOR(t):
     r'pàn'
     return t
+
 def t_IF(t):
     r'rúguǒ'
     return t
@@ -84,6 +84,14 @@ def t_RETURN(t):
     r'fǎnhuí'
     return t
 
+def t_VTRUE(t):
+    r'duì'
+    return t
+
+def t_VFALSE(t):
+    r'cuò'
+    return t
+    
 def t_MLCOMM(t):
     r'/*[^"]*\*/'
     return t
@@ -92,19 +100,12 @@ def t_ILCOMM(t):
     r'(//.*)'
     return t
 
-def t_STRING(t):
+def t_VSTRING(t):
     r'"[^"]*"'
     return t
 
-def t_VTRUE(t):
-    r'duì'
-    return t
-
-def t_VFALSE(t):
-    r'cuò'
-    return t
-
-t_VIDENTIFIER =  r'([a-z]|[A-Z])([a-z]|[A-Z]|[0-9])*'
+#regular expressions in variables
+t_IDENTIFIER =  r'([a-z]|[A-Z])([a-z]|[A-Z]|[0-9])*'
 t_VINTEGER = r'[0-9]+'
 t_VFLOAT = r'[0-9]*\.[0-9]+'
 t_EQUAL = r'\='
@@ -131,90 +132,24 @@ def t_newline(t):
 #ignore spaces and tabs
 t_ignore  = ' \t'
  
- # Error handling rule
+ #error handling 
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
  
 lexer = lex.lex()
 
-#input
-data = '''
-// Fibonacci numbers in PīnyīnScript
-gōngnéng fibonacci(n) {
-    rúguǒ (n <= 1) {
-        fǎnhuí n;
-    } biéde {
-        fǎnhuí fibonacci(n - 1) + fibonacci(n - 2);
-    }
-}
+#read PS_examples.txt (source code examples)
+#output tokens in tokens.txt
+def parse_file(filename, output_file):
+    with open(filename, 'r', encoding='utf-8') as file:
+        data = file.read()
+        lexer.input(data)
+        with open(output_file, 'w', encoding='utf-8') as output:
+            while True:
+                tok = lexer.token()
+                if not tok: 
+                    break
+                output.write(f"{tok.type} {tok.value} {tok.lineno} {tok.lexpos}\n")
 
-zhǔyàode {
-    zhěngshù f = fibonacci(10);
-    dǎyìn -> "The first ten numbers of Fibonacci are: ";
-    dǎyìn -> f;
-}
-
-// Print numbers backwards in PīnyīnScript
-gōngnéng printReverse(n) {
-    rúguǒ (n >= 1) {
-        dǎyìn -> n;
-        printReverse(n - 1);
-    }
-}
-
-zhǔyàode {
-    printReverse(100);
-}
-
-// Sum function in PīnyīnScript
-gōngnéng sum(x, y) {
-    fǎnhuí x + y;
-}
-
-zhǔyàode {
-    zhěngshù result = sum(9, 5);
-    dǎyìn -> "The result is: ";
-    dǎyìn -> result;
-}
-
-// Hello world in PīnyīnScript
-zhǔyàode {
-    dǎyìn -> "Hello world!!";
-}
-
-// Iterative factorial in PīnyīnScript
-gōngnéng iterativeFactorial(x) {
-    zhěngshù result = 1;
-    pàn (zhěngshù i = 1; i <= x; i++)
-        result = result * i;
-    }
-    fǎnhuí result;
-}
-
-// Recursive factorial in PīnyīnScript
-gōngnéng recursiveFactorial(x) {
-    rúguǒ (x <= 1) {
-        fǎnhuí 1;
-    } biéde {
-        fǎnhuí x * recursiveFactorial(x - 1);
-    }
-}
-
-zhǔyàode {
-    zhěngshù n = 5;
-    zhěngshù result = recursiveFactorial(n);
-    dǎyìn -> "The result is : ";
-    dǎyìn -> result;
-}
-'''
-
-lexer.input(data)
-
-#tokens generator
-while True:
-    tok = lexer.token()
-    if not tok: 
-        break      # No more input
-    #print(tok)
-    print(tok.type, tok.value, tok.lineno, tok.lexpos)
+parse_file('PS_examples.txt', 'tokens.txt')

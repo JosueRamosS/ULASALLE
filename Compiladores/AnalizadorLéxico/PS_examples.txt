@@ -42,6 +42,7 @@ zhǔyàode {
 }
 
 // Iterative factorial in PīnyīnScript
+
 gōngnéng iterativeFactorial(x) {
     zhěngshù result = 1;
     pàn (zhěngshù i = 1; i <= x; i++)
