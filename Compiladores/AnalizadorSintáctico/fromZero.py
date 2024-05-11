@@ -1,6 +1,3 @@
-
-from prettytable import PrettyTable
-
 filename = 'fromZeroGrammar.txt'
 with open(filename, 'r', encoding='utf-8') as file:
     lines = file.readlines()
@@ -118,8 +115,43 @@ def getFollows(nonTerminals, terminals, firsts, lines):
 follows = getFollows(nonTerminals, terminals, firsts, lines)
 # print(follows)
 
+def fillParseTable(lines, nonTerminals, terminals, firsts, follows):
+    # Crear una tabla vacía con no terminales como filas y terminales más el símbolo $ como columnas
+    parseTable = {nt: {t: '' for t in terminals + ['$']} for nt in nonTerminals}
 
-def generateHTMLTable(nonTerminals, terminals, firsts, follows):
+    # Procesar cada línea de producción
+    for line in lines:
+        parts = line.split('->')
+        if len(parts) == 2:
+            lhs = parts[0].strip()
+            rhs_parts = parts[1].strip().split()
+
+            if rhs_parts[0] == "''":  # Producción vacía
+                # Agregar la producción vacía a todas las entradas de FOLLOW(lhs)
+                for follow in follows[lhs]:
+                    parseTable[lhs][follow] = 'ε'
+            else:
+                first_symbol = rhs_parts[0]
+                if first_symbol in nonTerminals:
+                    # Si el primer símbolo es un no terminal, agrega la producción a todas las entradas de FIRST(first_symbol)
+                    for first in firsts[first_symbol]:
+                        if first != 'ε':
+                            parseTable[lhs][first] = ' '.join(rhs_parts)
+                        else:
+                            # Si 'ε' está en FIRST(first_symbol), también usar FOLLOW(lhs)
+                            for follow in follows[lhs]:
+                                parseTable[lhs][follow] = 'ε'
+                elif first_symbol in terminals:
+                    # Si el primer símbolo es un terminal, solo agrega a esa entrada específica
+                    parseTable[lhs][first_symbol] = ' '.join(rhs_parts)
+
+    return parseTable
+
+# Suponiendo que ya tienes las variables lines, nonTerminals, terminals, firsts, follows definidas
+parse_table = fillParseTable(lines, nonTerminals, terminals, firsts, follows)
+# print(parse_table)
+
+def generateHTMLTableUpdated(nonTerminals, terminals, firsts, follows, parseTable):
     # Comenzar el documento HTML
     html = """
     <html>
@@ -138,8 +170,8 @@ def generateHTMLTable(nonTerminals, terminals, firsts, follows):
                 <th>Nonterminal</th>
     """
     
-    # Añadir cabeceras para cada terminal
-    for terminal in terminals:
+    # Añadir cabeceras para cada terminal y la columna final con el símbolo $
+    for terminal in terminals + ['$']:
         html += f"<th>{terminal}</th>"
     
     html += "</tr>"
@@ -147,7 +179,7 @@ def generateHTMLTable(nonTerminals, terminals, firsts, follows):
     # Añadir los datos de cada no terminal
     for nt in nonTerminals:
         firsts_str = ", ".join(firsts.get(nt, []))
-        follows_str = ", ".join(follows.get(nt, []))  # Simula una función para obtener los FOLLOWs
+        follows_str = ", ".join(follows.get(nt, []))
         html += f"""
             <tr>
                 <td>{firsts_str}</td>
@@ -155,9 +187,9 @@ def generateHTMLTable(nonTerminals, terminals, firsts, follows):
                 <td>{nt}</td>
         """
         
-        # Simular datos de producción gramatical para cada terminal en la fila
-        for terminal in terminals:
-            production_str = " "  # Simula que obtienes la producción adecuada
+        # Añadir la producción gramatical para cada terminal en la fila
+        for terminal in terminals + ['$']:
+            production_str = parseTable[nt].get(terminal, '')
             html += f"<td>{production_str}</td>"
         
         html += "</tr>"
@@ -171,9 +203,8 @@ def generateHTMLTable(nonTerminals, terminals, firsts, follows):
     # Escribir la tabla HTML a un archivo
     with open('table.html', 'w', encoding='utf-8') as file:
         file.write(html)
+    return "Tabla sintáctica generada"
 
-# Usar esta función pasando los diccionarios firsts y un diccionario simulado de follows
-generateHTMLTable(nonTerminals, terminals, firsts, follows)
-
-
-
+# Suponiendo que ya tienes 'parse_table' y las otras variables definidas correctamente
+output_message = generateHTMLTableUpdated(nonTerminals, terminals, firsts, follows, parse_table)
+print(output_message)
