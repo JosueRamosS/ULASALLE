@@ -1,3 +1,5 @@
+import csv
+
 filename = 'fromZeroGrammar.txt'
 with open(filename, 'r', encoding='utf-8') as file:
     lines = file.readlines()
@@ -111,7 +113,6 @@ def getFollows(nonTerminals, terminals, firsts, lines):
 
     return follows
 
-# Suponiendo que tienes 'firsts' y las otras variables definidas correctamente
 follows = getFollows(nonTerminals, terminals, firsts, lines)
 # print(follows)
 
@@ -147,11 +148,10 @@ def fillParseTable(lines, nonTerminals, terminals, firsts, follows):
 
     return parseTable
 
-# Suponiendo que ya tienes las variables lines, nonTerminals, terminals, firsts, follows definidas
 parse_table = fillParseTable(lines, nonTerminals, terminals, firsts, follows)
 # print(parse_table)
 
-def generateHTMLTableUpdated(nonTerminals, terminals, firsts, follows, parseTable):
+def generateHTMLTable(nonTerminals, terminals, firsts, follows, parseTable):
     # Comenzar el documento HTML
     html = """
     <html>
@@ -205,6 +205,92 @@ def generateHTMLTableUpdated(nonTerminals, terminals, firsts, follows, parseTabl
         file.write(html)
     return "Tabla sintáctica generada"
 
-# Suponiendo que ya tienes 'parse_table' y las otras variables definidas correctamente
-output_message = generateHTMLTableUpdated(nonTerminals, terminals, firsts, follows, parse_table)
+output_message = generateHTMLTable(nonTerminals, terminals, firsts, follows, parse_table)
 print(output_message)
+
+def generateCSVTable(nonTerminals, terminals, firsts, follows, parseTable):
+    # Abrir un archivo CSV para escribir
+    with open('table.csv', 'w', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        # Escribir la cabecera
+        header = ['FIRST', 'FOLLOW', 'Nonterminal'] + terminals + ['$']
+        writer.writerow(header)
+
+        # Escribir las filas para cada no terminal
+        for nt in nonTerminals:
+            row = [
+                ", ".join(firsts.get(nt, [])),  # Datos de FIRST
+                ", ".join(follows.get(nt, [])),  # Datos de FOLLOW
+                nt  # El no terminal
+            ]
+            # Añadir la producción gramatical para cada terminal en la fila
+            row.extend(parseTable[nt].get(terminal, '') for terminal in terminals + ['$'])
+            writer.writerow(row)
+
+    return "Tabla sintáctica generada en CSV"
+
+output_message_csv = generateCSVTable(nonTerminals, terminals, firsts, follows, parse_table)
+print(output_message_csv)
+
+def traceParsing(input_string, terminals, nonTerminals, table_path):
+    # Carga la tabla de análisis sintáctico desde el archivo CSV
+    parse_table = {}
+    with open(table_path, 'r', newline='', encoding='utf-8') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            non_terminal = row['Nonterminal']
+            parse_table[non_terminal] = {t: row[t] for t in terminals + ['$']}
+
+    # Inicializa el stack y la entrada
+    stack = ['$']
+    stack.append(next(iter(nonTerminals)))  # Supone que el primer no terminal es el símbolo de inicio
+    input_tokens = input_string.split() + ['$']
+    
+    # Trace
+    trace = []
+    
+    # Proceso de análisis
+    idx = 0
+    while stack:
+        top = stack[-1]
+        current_input = input_tokens[idx]
+        trace.append((stack.copy(), input_tokens[idx:]))
+        
+        if top == current_input:
+            if top == '$':
+                trace.append(("Accept", ""))
+                break
+            else:
+                stack.pop()
+                idx += 1
+        elif top in nonTerminals:
+            rule = parse_table[top][current_input]
+            if rule:
+                stack.pop()
+                # Si la regla no es épsilon, añade los símbolos al stack
+                if rule != 'ε':
+                    stack.extend(reversed(rule.split()))
+                trace.append(("Apply rule", top + " -> " + rule))
+            else:
+                trace.append(("Error", "No rule"))
+                break
+        else:
+            trace.append(("Error", "Mismatch"))
+            break
+    
+    # Exportar el trace a CSV
+    with open('trace_parsing.csv', 'w', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(["Stack", "Input", "Action"])
+        for tr in trace:
+            if isinstance(tr[0], list):
+                writer.writerow([' '.join(tr[0]), ' '.join(tr[1]), ""])
+            else:
+                writer.writerow(['', '', tr[0] + ": " + tr[1]])
+
+    return "Trace parsing generado en 'trace_parsing.csv'"
+
+
+input_string = "MAIN OKEY FOR OPAR DTINTEGER IDENTIFIER ASSIGN VINTEGER PLUS VINTEGER DOTCOMMA VFLOAT EQUAL VFLOAT DOTCOMMA IDENTIFIER PLUS PLUS CPAR OKEY DTINTEGER IDENTIFIER ASSIGN EXPRESSION DOTCOMMA FOR OPAR DTINTEGER IDENTIFIER ASSIGN VINTEGER PLUS VINTEGER DOTCOMMA VFLOAT MULT VFLOAT DOTCOMMA IDENTIFIER PLUS PLUS CPAR OKEY CKEY CKEY"
+table_path = 'table.csv'
+print(traceParsing(input_string, terminals, nonTerminals, table_path))
