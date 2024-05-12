@@ -1,9 +1,0 @@
-主 { 
-	整数 x = 5;
-	圈 ( 整数 i = 1; i <= altura ; i++ ) { 
-		圈 ( 整数 espacios = altura - 1 ; espacios > 0 ; espacios-- ) {
-            打印 (j);
-            打印 (" ");
-		}
-	} 
-}

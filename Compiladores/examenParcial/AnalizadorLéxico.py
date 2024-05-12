@@ -208,4 +208,5 @@ def parse_file(filename):
     return types_string.strip()  # Elimina el espacio extra al final
 
 # Usar la función y almacenar los tipos de los tokens en una variable
-token_types = parse_file('PS_examples.txt')
+token_types = parse_file('Entrada.txt')
+# print(token_types)
