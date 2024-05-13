@@ -1,0 +1,130 @@
+
+    <html>
+    <head>
+        <style>
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid black; padding: 8px; text-align: left; width: auto; }
+            th { background-color: #f2f2f2; }
+        </style>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <th style="width: 10%;">FIRST</th>
+                <th style="width: 10%;">FOLLOW</th>
+                <th style="width: 15%;">Nonterminal</th>
+    <th style="width: 1.51%;">IDENTIFIER</th><th style="width: 1.51%;">OPAR</th><th style="width: 1.51%;">CPAR</th><th style="width: 1.51%;">OKEY</th><th style="width: 1.51%;">CKEY</th><th style="width: 1.51%;">COMMA</th><th style="width: 1.51%;">MAIN</th><th style="width: 1.51%;">FOR</th><th style="width: 1.51%;">DOTCOMMA</th><th style="width: 1.51%;">OPINC</th><th style="width: 1.51%;">OPDC</th><th style="width: 1.51%;">IF</th><th style="width: 1.51%;">ELSE</th><th style="width: 1.51%;">PRINT</th><th style="width: 1.51%;">RETURN</th><th style="width: 1.51%;">ASSIGN</th><th style="width: 1.51%;">PLUS</th><th style="width: 1.51%;">MINUS</th><th style="width: 1.51%;">AND</th><th style="width: 1.51%;">OR</th><th style="width: 1.51%;">EQUAL</th><th style="width: 1.51%;">NOTEQUAL</th><th style="width: 1.51%;">GREATERTH</th><th style="width: 1.51%;">LESSTH</th><th style="width: 1.51%;">GREATEQTH</th><th style="width: 1.51%;">LESSEQTH</th><th style="width: 1.51%;">MULT</th><th style="width: 1.51%;">DIV</th><th style="width: 1.51%;">MOD</th><th style="width: 1.51%;">NOT</th><th style="width: 1.51%;">VINTEGER</th><th style="width: 1.51%;">VFLOAT</th><th style="width: 1.51%;">VSTRING</th><th style="width: 1.51%;">VCHAR</th><th style="width: 1.51%;">VTRUE</th><th style="width: 1.51%;">VFALSE</th><th style="width: 1.51%;">DTINTEGER</th><th style="width: 1.51%;">DTFLOAT</th><th style="width: 1.51%;">DTSTRING</th><th style="width: 1.51%;">DTCHAR</th><th style="width: 1.51%;">DTBOOL</th><th style="width: 1.51%;">DTVOID</th><th style="width: 1.51%;">$</th></tr>
+            <tr>
+                <td>MAIN, ε, DTINTEGER, DTFLOAT, DTSTRING, DTCHAR, DTBOOL, DTVOID</td>
+                <td>$</td>
+                <td>PROGRAM</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td>MAIN'</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>FUNCTION'</td><td>FUNCTION'</td><td>FUNCTION'</td><td>FUNCTION'</td><td>FUNCTION'</td><td>FUNCTION'</td><td>ε</td></tr>
+            <tr>
+                <td>DTINTEGER, DTFLOAT, DTSTRING, DTCHAR, DTBOOL, DTVOID</td>
+                <td>$</td>
+                <td>FUNCTION'</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>DATATYPE IDENTIFIER OPAR PARAMETERS CPAR OKEY STATEMENTS LOOPS IFELSES CKEY</td><td>DATATYPE IDENTIFIER OPAR PARAMETERS CPAR OKEY STATEMENTS LOOPS IFELSES CKEY</td><td>DATATYPE IDENTIFIER OPAR PARAMETERS CPAR OKEY STATEMENTS LOOPS IFELSES CKEY</td><td>DATATYPE IDENTIFIER OPAR PARAMETERS CPAR OKEY STATEMENTS LOOPS IFELSES CKEY</td><td>DATATYPE IDENTIFIER OPAR PARAMETERS CPAR OKEY STATEMENTS LOOPS IFELSES CKEY</td><td>DATATYPE IDENTIFIER OPAR PARAMETERS CPAR OKEY STATEMENTS LOOPS IFELSES CKEY</td><td></td></tr>
+            <tr>
+                <td>DTINTEGER, DTFLOAT, DTSTRING, DTCHAR, DTBOOL, DTVOID</td>
+                <td>CPAR</td>
+                <td>PARAMETERS</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>PARAMETER MORE_PARAMETERS</td><td>PARAMETER MORE_PARAMETERS</td><td>PARAMETER MORE_PARAMETERS</td><td>PARAMETER MORE_PARAMETERS</td><td>PARAMETER MORE_PARAMETERS</td><td>PARAMETER MORE_PARAMETERS</td><td></td></tr>
+            <tr>
+                <td>COMMA, ε</td>
+                <td>CPAR</td>
+                <td>MORE_PARAMETERS</td>
+        <td></td><td></td><td>ε</td><td></td><td></td><td>COMMA PARAMETER MORE_PARAMETERS</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td>DTINTEGER, DTFLOAT, DTSTRING, DTCHAR, DTBOOL, DTVOID</td>
+                <td>CPAR, COMMA</td>
+                <td>PARAMETER</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>DATATYPE IDENTIFIER</td><td>DATATYPE IDENTIFIER</td><td>DATATYPE IDENTIFIER</td><td>DATATYPE IDENTIFIER</td><td>DATATYPE IDENTIFIER</td><td>DATATYPE IDENTIFIER</td><td></td></tr>
+            <tr>
+                <td>MAIN, ε</td>
+                <td>$</td>
+                <td>MAIN'</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td>MAIN OKEY STATEMENTS LOOPS IFELSES CKEY</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>ε</td></tr>
+            <tr>
+                <td>FOR, ε</td>
+                <td>OKEY, $, CKEY, IF</td>
+                <td>LOOPS</td>
+        <td></td><td></td><td></td><td>ε</td><td>ε</td><td></td><td></td><td>FOR OPAR ASSIGNMENT CONDITION UPDATE CPAR LOOPS OKEY STATEMENTS LOOPS IFELSES CKEY</td><td></td><td></td><td></td><td>ε</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>ε</td></tr>
+            <tr>
+                <td>VINTEGER, VFLOAT, VSTRING, VCHAR, VTRUE, VFALSE, IDENTIFIER, OPAR, NOT</td>
+                <td>IDENTIFIER</td>
+                <td>CONDITION</td>
+        <td>EXPRESSION DOTCOMMA</td><td>EXPRESSION DOTCOMMA</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>EXPRESSION DOTCOMMA</td><td>EXPRESSION DOTCOMMA</td><td>EXPRESSION DOTCOMMA</td><td>EXPRESSION DOTCOMMA</td><td>EXPRESSION DOTCOMMA</td><td>EXPRESSION DOTCOMMA</td><td>EXPRESSION DOTCOMMA</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td>IDENTIFIER</td>
+                <td>CPAR</td>
+                <td>UPDATE</td>
+        <td>INCREMENT</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td>IDENTIFIER</td>
+                <td>CPAR</td>
+                <td>INCREMENT</td>
+        <td>IDENTIFIER OPUPDATE</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td>OPINC, OPDC</td>
+                <td>CPAR</td>
+                <td>OPUPDATE</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>OPINC</td><td>OPDC</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td>IF, ε</td>
+                <td>CKEY</td>
+                <td>IFELSES</td>
+        <td></td><td></td><td></td><td></td><td>ε</td><td></td><td></td><td></td><td></td><td></td><td></td><td>IF OPAR EXPRESSION CPAR OKEY STATEMENTS LOOPS IFELSES CKEY ELSE'</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td>ELSE, ε</td>
+                <td>CKEY</td>
+                <td>ELSE'</td>
+        <td></td><td></td><td></td><td></td><td>ε</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>ELSE OKEY STATEMENTS LOOPS IFELSES CKEY</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td>PRINT, DTINTEGER, DTFLOAT, DTSTRING, DTCHAR, DTBOOL, DTVOID, RETURN, ε</td>
+                <td>FOR, IF, CKEY, $, OKEY</td>
+                <td>STATEMENTS</td>
+        <td></td><td></td><td></td><td>ε</td><td>ε</td><td></td><td></td><td>ε</td><td></td><td></td><td></td><td>ε</td><td></td><td>PRINT OPAR EXPRESSION CPAR DOTCOMMA STATEMENTS</td><td>RETURN EXPRESSION DOTCOMMA STATEMENTS</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>ASSIGNMENT STATEMENTS</td><td>ASSIGNMENT STATEMENTS</td><td>ASSIGNMENT STATEMENTS</td><td>ASSIGNMENT STATEMENTS</td><td>ASSIGNMENT STATEMENTS</td><td>ASSIGNMENT STATEMENTS</td><td>ε</td></tr>
+            <tr>
+                <td>DTINTEGER, DTFLOAT, DTSTRING, DTCHAR, DTBOOL, DTVOID</td>
+                <td>FOR, PRINT, DTFLOAT, OPAR, CKEY, $, VFALSE, VSTRING, OKEY, DTBOOL, VTRUE, RETURN, VFLOAT, VINTEGER, VCHAR, NOT, DTCHAR, DTSTRING, DTVOID, IF, IDENTIFIER, DTINTEGER</td>
+                <td>ASSIGNMENT</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>DATATYPE IDENTIFIER ASSIGN EXPRESSION DOTCOMMA</td><td>DATATYPE IDENTIFIER ASSIGN EXPRESSION DOTCOMMA</td><td>DATATYPE IDENTIFIER ASSIGN EXPRESSION DOTCOMMA</td><td>DATATYPE IDENTIFIER ASSIGN EXPRESSION DOTCOMMA</td><td>DATATYPE IDENTIFIER ASSIGN EXPRESSION DOTCOMMA</td><td>DATATYPE IDENTIFIER ASSIGN EXPRESSION DOTCOMMA</td><td></td></tr>
+            <tr>
+                <td>VINTEGER, VFLOAT, VSTRING, VCHAR, VTRUE, VFALSE, IDENTIFIER, OPAR, NOT</td>
+                <td>DOTCOMMA, CPAR</td>
+                <td>EXPRESSION</td>
+        <td>TERM EXPRESSION'</td><td>TERM EXPRESSION'</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>TERM EXPRESSION'</td><td>TERM EXPRESSION'</td><td>TERM EXPRESSION'</td><td>TERM EXPRESSION'</td><td>TERM EXPRESSION'</td><td>TERM EXPRESSION'</td><td>TERM EXPRESSION'</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td>PLUS, MINUS, AND, OR, EQUAL, NOTEQUAL, GREATERTH, LESSTH, GREATEQTH, LESSEQTH, ε</td>
+                <td>DOTCOMMA, CPAR</td>
+                <td>EXPRESSION'</td>
+        <td></td><td></td><td>ε</td><td></td><td></td><td></td><td></td><td></td><td>ε</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>PLUS TERM EXPRESSION'</td><td>MINUS TERM EXPRESSION'</td><td>AND TERM EXPRESSION'</td><td>OR TERM EXPRESSION'</td><td>EQUAL TERM EXPRESSION'</td><td>NOTEQUAL TERM EXPRESSION'</td><td>GREATERTH TERM EXPRESSION'</td><td>LESSTH TERM EXPRESSION'</td><td>GREATEQTH TERM EXPRESSION'</td><td>LESSEQTH TERM EXPRESSION'</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td>VINTEGER, VFLOAT, VSTRING, VCHAR, VTRUE, VFALSE, IDENTIFIER, OPAR, NOT</td>
+                <td>AND, GREATERTH, CPAR, EQUAL, GREATEQTH, DOTCOMMA, LESSEQTH, LESSTH, NOTEQUAL, MINUS, PLUS, OR</td>
+                <td>TERM</td>
+        <td>FACTOR TERM'</td><td>FACTOR TERM'</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>FACTOR TERM'</td><td>FACTOR TERM'</td><td>FACTOR TERM'</td><td>FACTOR TERM'</td><td>FACTOR TERM'</td><td>FACTOR TERM'</td><td>FACTOR TERM'</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td>MULT, DIV, MOD, ε</td>
+                <td>AND, GREATERTH, CPAR, EQUAL, GREATEQTH, DOTCOMMA, LESSEQTH, LESSTH, NOTEQUAL, MINUS, PLUS, OR</td>
+                <td>TERM'</td>
+        <td></td><td></td><td>ε</td><td></td><td></td><td></td><td></td><td></td><td>ε</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>ε</td><td>ε</td><td>ε</td><td>ε</td><td>ε</td><td>ε</td><td>ε</td><td>ε</td><td>ε</td><td>ε</td><td>MULT FACTOR TERM'</td><td>DIV FACTOR TERM'</td><td>MOD FACTOR TERM'</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td>VINTEGER, VFLOAT, VSTRING, VCHAR, VTRUE, VFALSE, IDENTIFIER, OPAR, NOT</td>
+                <td>AND, GREATERTH, CPAR, EQUAL, PLUS, GREATEQTH, DIV, DOTCOMMA, MOD, LESSEQTH, LESSTH, NOTEQUAL, MINUS, MULT, OR</td>
+                <td>FACTOR</td>
+        <td>DVORID</td><td>OPAR EXPRESSION CPAR</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>NOT FACTOR</td><td>DVORID</td><td>DVORID</td><td>DVORID</td><td>DVORID</td><td>DVORID</td><td>DVORID</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td>VINTEGER, VFLOAT, VSTRING, VCHAR, VTRUE, VFALSE, IDENTIFIER</td>
+                <td>AND, GREATERTH, CPAR, EQUAL, PLUS, GREATEQTH, DIV, DOTCOMMA, MOD, LESSEQTH, LESSTH, NOTEQUAL, MINUS, MULT, OR</td>
+                <td>DVORID</td>
+        <td>IDENTIFIER</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>VINTEGER</td><td>VFLOAT</td><td>VSTRING</td><td>VCHAR</td><td>VTRUE</td><td>VFALSE</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr>
+                <td>DTINTEGER, DTFLOAT, DTSTRING, DTCHAR, DTBOOL, DTVOID</td>
+                <td>IDENTIFIER</td>
+                <td>DATATYPE</td>
+        <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>DTINTEGER</td><td>DTFLOAT</td><td>DTSTRING</td><td>DTCHAR</td><td>DTBOOL</td><td>DTVOID</td><td></td></tr>
+        </table>
+    </body>
+    </html>
+    
