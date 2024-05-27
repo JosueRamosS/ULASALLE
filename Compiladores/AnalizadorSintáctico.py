@@ -3,6 +3,7 @@ import webbrowser
 import os
 
 from AnalizadorLéxico import token_types
+from AnalizadorLéxico import listaCodFuente
 from graphviz import Digraph
 
 inputTokens = token_types
@@ -141,57 +142,6 @@ def fillParseTable(lines, nonTerminals, terminals, firsts, follows):
                 elif first_symbol in terminals: # Si el primer símbolo es un terminal, solo agrega a esa entrada específica
                     parseTable[lhs][first_symbol] = ' '.join(rhs_parts)
     return parseTable
-
-def generateHTMLTable(nonTerminals, terminals, firsts, follows, parseTable):
-    html = """
-    <html>
-    <head>
-        <style>
-            table { border-collapse: collapse; width: 100%; }
-            th, td { border: 1px solid black; padding: 8px; text-align: left; width: auto; }
-            th { background-color: #f2f2f2; }
-        </style>
-    </head>
-    <body>
-        <table>
-            <tr>
-                <th style="width: 10%;">FIRST</th>
-                <th style="width: 10%;">FOLLOW</th>
-                <th style="width: 15%;">Nonterminal</th>
-    """
-    width_percent = 65 / (len(terminals) + 1)
-    for terminal in terminals + ['$']:
-        html += f'<th style="width: {width_percent:.2f}%;">{terminal}</th>'
-    html += "</tr>"
-    for nt in nonTerminals:
-        firsts_str = ", ".join(firsts.get(nt, []))
-        follows_str = ", ".join(follows.get(nt, []))
-        html += f"""
-            <tr>
-                <td>{firsts_str}</td>
-                <td>{follows_str}</td>
-                <td>{nt}</td>
-        """
-        for terminal in terminals + ['$']:
-            production_str = parseTable[nt].get(terminal, '')
-            html += f"<td>{production_str}</td>"
-        html += "</tr>"
-    
-    html += """
-        </table>
-    </body>
-    </html>
-    """
-    folder_path = 'C:\\Users\\passionfruit\\Desktop\\examenParcial'  # Especificar la carpeta de destino
-    file_path = os.path.join(folder_path, 'table.html')  # Ruta completa del archivo
-    with open(file_path, 'w', encoding='utf-8') as file:
-        file.write(html)
-    
-    # Abrir automáticamente el archivo HTML en el navegador predeterminado
-    webbrowser.open_new_tab('file://' + file_path.replace('\\', '/'))
-
-    return "Tabla sintáctica generada y abierta en el navegador"
-
     
 def generateCSVTable(nonTerminals, terminals, firsts, follows, parseTable):
     with open('table.csv', 'w', newline='', encoding='utf-8') as file: # Abrir un archivo CSV para escribir
@@ -207,8 +157,6 @@ def generateCSVTable(nonTerminals, terminals, firsts, follows, parseTable):
             row.extend(parseTable[nt].get(terminal, '') for terminal in terminals + ['$']) # Añadir la producción gramatical para cada terminal en la fila
             writer.writerow(row)
     return "Tabla sintáctica generada en CSV"
-
-import csv
 
 def traceParsingTable(input_string, terminals, nonTerminals, table_path):
     parse_table = {}  # Carga la tabla de análisis sintáctico desde el archivo CSV
@@ -267,15 +215,6 @@ class ASTNode:
     def add_child(self, node):
         self.children.append(node)
 
-class ASTNode:
-    def __init__(self, symbol, is_root=False):
-        self.symbol = symbol
-        self.children = []
-        self.is_root = is_root
-    
-    def add_child(self, child):
-        self.children.append(child)
-
 def traceParsingArbol(input_string, terminals, nonTerminals, table_path):
     parse_table = {}
     with open(table_path, 'r', newline='', encoding='utf-8') as file:
@@ -321,7 +260,37 @@ def traceParsingArbol(input_string, terminals, nonTerminals, table_path):
     
     return False, None
 
-def create_graphviz_ast(node):
+def create_graphviz_ast(node, terminal_symbols, source_code):
+    graph = Digraph()
+    graph.attr(rankdir='TB')  # Top to Bottom direction
+
+    # Invertir la lista del código fuente
+    source_code = list(reversed(source_code))
+    terminal_idx = 0
+
+    def add_nodes_edges(node, graph, parent=None):
+        nonlocal terminal_idx
+        node_id = node.symbol + str(id(node)) if not node.is_root else node.symbol  # Unique ID for each node
+        graph.node(node_id, node.symbol)
+
+        if parent:
+            graph.edge(parent, node_id)
+
+        # If the node is a terminal, add the corresponding source code character
+        if node.symbol in terminal_symbols and terminal_idx < len(source_code):
+            child_id = source_code[terminal_idx] + str(id(node))  # Unique ID for each terminal node
+            graph.node(child_id, source_code[terminal_idx])
+            graph.edge(node_id, child_id)
+            terminal_idx += 1
+
+        # Recursively add child nodes
+        for child in node.children:
+            add_nodes_edges(child, graph, node_id)
+    
+    add_nodes_edges(node, graph)
+    return node, graph
+
+def create_graphviz_ast1(node):
     graph = Digraph()
     graph.attr(rankdir='TB')  # Left to Right direction
 
@@ -336,14 +305,206 @@ def create_graphviz_ast(node):
     add_nodes_edges(node, graph)
     return graph
 
+def get_leaf_nodes(node):
+    leaf_nodes = []
+    
+    def dfs(current_node):
+        if not current_node.children:  # Si el nodo no tiene hijos, es una hoja
+            if current_node.symbol != 'ε':  # Omitir el símbolo ε
+                leaf_nodes.append(current_node.symbol)
+        for child in current_node.children:
+            dfs(child)
+    
+    dfs(node)
+    leaf_nodes.reverse()  # Revertir el orden de la lista
+    # leaf_nodes_str = ' '.join(leaf_nodes)  # Convertir la lista a una cadena de caracteres
+    return leaf_nodes
+
+def modify_ast(tree, listaCodFuente):
+    listaCodFuente = list(reversed(listaCodFuente))
+    def process_node(node):
+        if node.symbol == 'ε':
+            return
+        if not node.children:  # Si es una hoja
+            if listaCodFuente:
+                hijo = listaCodFuente.pop(0)
+                node.add_child(ASTNode(hijo))
+        else:
+            for child in node.children:
+                process_node(child)
+
+    process_node(tree)
+    return tree
+
+# def print_ast(node, indent="", last='updown'):
+#     nb_children = lambda node: sum(nb_children(child) for child in node.children) + 1
+#     size_branch = {child: nb_children(child) for child in node.children}
+
+#     """ Creation of balanced lists for "up" branch and "down" branch. """
+#     up = sorted(node.children, key=lambda child: nb_children(child))
+#     down = []
+#     while up and sum(size_branch[n] for n in down) < sum(size_branch[n] for n in up):
+#         down.append(up.pop())
+
+#     """ Printing of "up" branch. """
+#     for child in up:     
+#         next_last = 'up' if up.index(child) == 0 else ''
+#         next_indent = '{0}{1}{2}'.format(indent, '│   ' if 'up' in last else '    ', ' ' * (len(node.symbol) + 2))
+#         print_ast(child, next_indent, next_last)
+
+#     """ Printing of current node. """
+#     if last == 'up': start_shape = '┌'
+#     elif last == 'down': start_shape = '└'
+#     elif last == 'updown': start_shape = ' '
+#     else: start_shape = '├'
+
+#     if len(node.children) > 0:
+#         end_shape = '┤'
+#     else:
+#         end_shape = ''
+        
+#     print('{0}{1}{2} {3}'.format(indent, start_shape, node.symbol, end_shape))
+
+#     """ Printing of "down" branch. """
+#     for child in down:    
+#         next_last = 'down' if down.index(child) == len(down) - 1 else ''
+#         next_indent = '{0}{1}{2}'.format(indent, '│   ' if 'down' in last else '    ', ' ' * (len(node.symbol) + 2))
+#         print_ast(child, next_indent, next_last)
+
+def create_symbol_table(tree):
+    symbol_table = [["Nombre", "Tipo", "Valor", "Var o Fun", "Scope"]]
+
+    def find_leaf_value(node):
+        if not node.children:
+            return node.symbol
+        return find_leaf_value(node.children[0])
+
+    def process_global_assignment(node):
+        entry = ["", "", "", "var", "global"]
+        datatype_node = find_child_node(node, "DATATYPE")
+        identifier_node = find_child_node(node, "IDENTIFIER")
+        expression_node = find_child_node(node, "EXPRESSION")
+
+        if datatype_node:
+            entry[1] = find_leaf_value(datatype_node)
+        if identifier_node:
+            entry[0] = find_leaf_value(identifier_node)
+        if expression_node:
+            entry[2] = find_expression_value(expression_node)
+
+        if entry[0] and entry[1]:
+            symbol_table.append(entry)
+
+    def process_function(node):
+        entry = ["", "", "null", "fun", "global"]
+        datatype_node = find_child_node(node, "DATATYPE")
+        identifier_node = find_child_node(node, "IDENTIFIER")
+
+        if datatype_node:
+            entry[1] = find_leaf_value(datatype_node)
+        if identifier_node:
+            entry[0] = find_leaf_value(identifier_node)
+
+        function_name = entry[0]
+
+        if function_name and entry[1]:
+            symbol_table.append(entry)
+
+            parameters_node = find_child_node(node, "PARAMETERS")
+            if parameters_node:
+                process_parameters(parameters_node, function_name)
+
+            statements_node = find_child_node(node, "STATEMENTS")
+            if statements_node:
+                process_statements(statements_node, function_name)
+
+    def process_main(node):
+        statements_node = find_child_node(node, "STATEMENTS")
+        if statements_node:
+            process_statements(statements_node, "MAIN")
+
+    def process_parameters(node, function_name):
+        for child in node.children:
+            if child.symbol == "PARAMETER":
+                datatype_node = find_child_node(child, "DATATYPE")
+                identifier_node = find_child_node(child, "IDENTIFIER")
+                entry = ["", "", "null", "var", function_name]
+                if datatype_node:
+                    entry[1] = find_leaf_value(datatype_node)
+                if identifier_node:
+                    entry[0] = find_leaf_value(identifier_node)
+                if entry[0] and entry[1]:
+                    symbol_table.append(entry)
+            else:
+                process_parameters(child, function_name)
+
+    def process_statements(node, scope):
+        for child in node.children:
+            if child.symbol == "ASSIGNMENT":
+                process_assignment(child, scope)
+            else:
+                process_statements(child, scope)
+
+    def process_assignment(node, scope):
+        entry = ["", "", "", "var", scope]
+        datatype_node = find_child_node(node, "DATATYPE")
+        identifier_node = find_child_node(node, "IDENTIFIER")
+        expression_node = find_child_node(node, "EXPRESSION")
+
+        if datatype_node:
+            entry[1] = find_leaf_value(datatype_node)
+        if identifier_node:
+            entry[0] = find_leaf_value(identifier_node)
+        if expression_node:
+            entry[2] = find_expression_value(expression_node)
+
+        if entry[0] and entry[1]:
+            symbol_table.append(entry)
+
+    def find_child_node(node, symbol):
+        for child in node.children:
+            if child.symbol == symbol:
+                return child
+        return None
+
+    def find_expression_value(node):
+        for child in node.children:
+            if child.symbol in ["VINTEGER", "VFLOAT", "VSTRING", "VCHAR", "VTRUE", "VFALSE", "IDENTIFIER"]:
+                return find_leaf_value(child)
+            elif child.symbol in ["EXPRESSION", "TERM", "FACTOR", "DVORID"]:
+                value = find_expression_value(child)
+                if value:
+                    return value
+        return None
+
+    def traverse_tree(node):
+        if node.symbol == "GLOBALASSIGNMENT":
+            process_global_assignment(node)
+        elif node.symbol == "FUNCTION'":
+            process_function(node)
+        elif node.symbol == "MAIN'":
+            process_main(node)
+        for child in node.children:
+            traverse_tree(child)
+
+    traverse_tree(tree)
+    return symbol_table
+
+def print_symbol_table(symbol_table):
+    # Calcula el ancho máximo para cada columna
+    col_widths = [max(len(str(item)) for item in col) for col in zip(*symbol_table)]
+    # Imprime la tabla alineada
+    for row in symbol_table:
+        print("  ".join(f"{item:<{col_widths[i]}}" for i, item in enumerate(row)))
+
 
 #GENERAR TABLA SINTÁCTICA
 parse_table = fillParseTable(lines, nonTerminals, terminals, firsts, follows)
 # print(parse_table)
 
-#TABLA SINTÁCTICA EN HTML PARA UNA MEJOR VISUALIZACIÓN
-output_message = generateHTMLTable(nonTerminals, terminals, firsts, follows, parse_table)
-# print(output_message)
+# #TABLA SINTÁCTICA EN HTML PARA UNA MEJOR VISUALIZACIÓN
+# output_message = generateHTMLTable(nonTerminals, terminals, firsts, follows, parse_table)
+# # print(output_message)
 
 #TABLA SINTÁCTICA EN CSV PARA EL PARSEO
 output_message_csv = generateCSVTable(nonTerminals, terminals, firsts, follows, parse_table)
@@ -355,9 +516,28 @@ output_message_parsing = traceParsingTable(input, terminals, nonTerminals, table
 print("\033[38;5;19m"+ output_message_parsing +"\033[0m")
 
 accepted, ast = traceParsingArbol(input, terminals, nonTerminals, table_path)
+nodosHijos = get_leaf_nodes(ast)
+modified_tree = modify_ast(ast, listaCodFuente)
+
+# Generar el árbol con las asociaciones
 if accepted:
-    graph = create_graphviz_ast(ast)
-    graph.render('AST', format='png', view=True)
+    graph1 = create_graphviz_ast1(modified_tree)
+    graph1.render('AST', format='png', view=True)
+    # ast1, graph = create_graphviz_ast(ast, nodosHijos, listaCodFuente)
+    # graph.render('AST', format='png', view=True)
     print("\033[32mÁrbol generado !!!\033[0m" + "\n")
 else:
     print("\033[31mÁrbol no generado !!!\033[0m" + "\n")
+
+# print(token_types)
+# print(nodosHijos)
+# print(listaCodFuente)
+# create_graphviz_ast1(modified_tree)
+# print_ast(modified_tree)
+
+
+# Crear la tabla de símbolos
+symbol_table = create_symbol_table(modified_tree)
+
+# Imprimir la tabla de símbolos
+print_symbol_table(symbol_table)

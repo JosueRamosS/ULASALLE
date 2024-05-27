@@ -1,16 +1,20 @@
+整数 y = 25 ;
+
+整数 f2 ( 整数 c , 小数 d ) {
+	整数 z = 18 ;
+	小数 u = 17.6 ;
+	逻辑 b = false ;
+	打印 ( z ) ;
+	回 z ;
+}
+
+整数 f1 ( 整数 a ) {
+	整数 x = 15 ;
+	打印 ( x ) ;
+	回 x ;
+}
+
 主 { 
-	如果 ( true && true ) { 
-		如果 ( false || true ) {
-			打印 ( true ) ; 
-		} 
-		否则 {
-			打印 ( false ) ; 
-		} 
-	} 否则 { 
-		如果 ( x >= 11 ) { 
-			打印 ( true ) ;
-		} 否则 { 
-			打印 ( true ) ;
-		} 
-	} 
+	逻辑 boolTrue = true ; 
+	逻辑 boolFalse = false ; 
 }

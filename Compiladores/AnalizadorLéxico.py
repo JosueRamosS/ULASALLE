@@ -207,6 +207,26 @@ def parse_file(filename):
 
     return types_string.strip()  # Elimina el espacio extra al final
 
+def parse_file_to_list(filename):
+    token_values = []  # Lista para almacenar los valores de los tokens
+
+    with open(filename, 'r', encoding='utf-8') as file:
+        data = file.read()
+        lexer.input(data)
+        while True:
+            tok = lexer.token()
+            if not tok: 
+                break
+            token_values.append(tok.value)  # Almacena el valor del token en la lista
+
+    # token_values_str = ' '.join(token_values)
+    return token_values
+
+# Ejemplo de uso
+listaCodFuente = parse_file_to_list('Entrada.txt')
+# print(listaCodFuente)
+# print(token_values_list)
+
 # Usar la función y almacenar los tipos de los tokens en una variable
 token_types = parse_file('Entrada.txt')
 # print(token_types)
